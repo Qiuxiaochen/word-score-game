@@ -103,6 +103,7 @@ var BAG_OF_LETTERS = [
 
 var YOUR_HAND = new Array();
 var SCORE = 0;
+
 function startGame() {
 	addNumbersFromBag();
 	displayHand();
@@ -150,7 +151,107 @@ function getAvailableLetter(){
 
 function findWordToUse(){
  //TODO Your job starts here.
-	alert("Your code needs to go here");	
+ 	function getInput() {
+
+ 		let ret = [];
+ 		for (let i=0; i < 20; i++) {
+
+ 			let letter = $(`#letter-${i}`).text().trim();
+ 			let points = $(`#points-${i}`).text().trim();
+ 		
+ 			if (letter.length > 0 && points.length > 0 && points > 0) {
+ 				ret.push({letter:letter, points: points})
+ 			}
+ 		}
+ 		return ret;
+ 	}
+
+ 	function writeOutput(word) {
+ 		$('#human-word-input').val(word)
+ 		$('#human-find-word-button').click()
+ 	}
+
+ 	function retireTheHand() {
+ 		$('#retire-hand-button').click()
+ 	}
+
+ 	function combine(index, rawString, usedChar){
+ 		if (index == usedChar.length){
+ 			lowercaseString = rawString.toLowerCase()
+ 			console.log("Combination: "+lowercaseString)
+ 			if(Word_List.isInList(lowercaseString)){
+ 				candidate.push(rawString)
+ 				console.log("Bingo")
+ 			}
+ 			return
+ 		}
+ 		for (let i = 0; i <= rawString.length; i++){
+ 			newString = rawString.substring(0,i) + usedChar[index] + rawString.substring(i,rawString.length)
+ 			combine(index+1, newString, usedChar)
+ 		}
+
+ 	}
+
+ 	function findCandidate(usedChar, remainChar) {
+
+ 		console.log("RemainChar: "+remainChar)
+
+ 		if (remainChar.length == 0){
+ 			return
+ 		}
+
+ 		for (let i = 0; i < remainChar.length; i++){
+ 			char = remainChar[i]
+ 			usedChar.push(char)
+ 			combine(0, "", usedChar)
+
+ 			tempRemainChar = remainChar
+ 			tempRemainChar.splice(i, 1)
+ 			findCandidate(usedChar, tempRemainChar)
+ 			usedChar.pop()
+ 		}
+ 	}
+
+ 	counter = 0
+ 	while (input = getInput()){
+	 	input = getInput()
+	 	var candidate = []
+	 	let charList = []
+	 	for (let i=0; i < input.length; i++){
+	 		charList.push(input[i]["letter"])
+	 	}
+
+	 	findCandidate([], charList)
+
+	 	result = ""
+	 	maxScore = 0
+	 	for (let index = 0; index < candidate.length; index++){
+	 		score = 0
+	 		item = candidate[index]
+	 		for (let sindex=0; sindex < item.length; sindex++){
+	 			for (let iindex = 0; iindex < input.length; iindex++){
+	 				if (input[iindex]["letter"] == item[sindex]){
+	 					score += parseInt(input[iindex]["points"])
+	 					break;
+	 				}
+	 			}
+	 		}
+ 			if (score > maxScore){
+ 				result = item
+ 			}
+	 	}
+
+	 	if(result == ""){
+	 		retireTheHand()
+	 	}else{
+	 		writeOutput(item)
+	 	}
+ 	}
+
+
+ 	
+
+	alert("Counter"+counter);	
 }
 function humanFindWordToUse(){
 	
