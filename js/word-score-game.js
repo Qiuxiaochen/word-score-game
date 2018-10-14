@@ -247,11 +247,6 @@ function findWordToUse(){
 	 		writeOutput(item)
 	 	}
  	}
-
-
- 	
-
-	alert("Counter"+counter);	
 }
 function humanFindWordToUse(){
 	
